@@ -1,25 +1,775 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body> 
-    <ul id="nav">
-        <li>
-            <a href="pages/about.html"> About </a>
-        </li>
-        <li>
-            <a href="pages/projects.html"> Projects </a>
-        </li>
-        <li>
-            <a href="index.html"> Home </a>
-        </li>
-    </ul>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Michael Sun</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <main>
-        
-    </main>
+    :root {
+      --black: #111110;
+      --ink: #1c1c1b;
+      --mid: #6b6b68;
+      --light: #b0b0ac;
+      --rule: #e4e4e0;
+      --bg: #fafaf8;
+      --white: #ffffff;
+      --accent: #c84b2f;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .nav-logo {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--black);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--black); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .hero-content {
+      max-width: 560px;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--mid);
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s forwards;
+    }
+
+    .hero-name {
+      font-size: clamp(2.4rem, 5vw, 3.5rem);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.3s forwards;
+    }
+
+    .hero-desc strong {
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.4s forwards;
+    }
+
+    /* Photo slot */
+    .hero-photo {
+      width: 220px;
+      height: 270px;
+      flex-shrink: 0;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.25s forwards;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-photo-placeholder svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--light);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .hero-photo-placeholder span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 300;
+      color: var(--light);
+      letter-spacing: 0.08em;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.75rem;
+      background: var(--black);
+      color: var(--white);
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--black);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .btn-ghost {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mid);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--black);
+      border-color: var(--black);
+    }
+
+    /* ── SECTION SHELL ── */
+    section {
+      padding: 6rem 3rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+
+    .section-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 300;
+      color: var(--light);
+      letter-spacing: 0.1em;
+    }
+
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.25rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--black);
+      line-height: 1;
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--rule);
+    }
+
+    .project-card {
+      padding: 2.25rem 2.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      text-decoration: none;
+      display: block;
+      position: relative;
+      transition: background 0.2s;
+      background: var(--white);
+    }
+
+    .project-card:nth-child(even) { border-right: none; }
+    .project-card:nth-last-child(-n+2) { border-bottom: none; }
+
+    .project-card:hover { background: var(--bg); }
+
+    .project-card:hover .project-arrow { opacity: 1; transform: translate(2px, -2px); }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .project-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--black);
+      line-height: 1.2;
+    }
+
+
+    .project-arrow {
+      font-size: 1rem;
+      color: var(--light);
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--mid);
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--mid);
+      border: 1px solid var(--rule);
+      padding: 0.2rem 0.55rem;
+      background: var(--bg);
+    }
+
+    /* ── PROJECT MEDIA SLOT ── */
+    .project-media {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--rule);
+      border: 1px dashed var(--light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .project-media img,
+    .project-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-media-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 100%;
+      height: 100%;
+      padding: 1rem;
+    }
+
+    .project-media-placeholder svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--light);
+      fill: none;
+      stroke-width: 1.5;
+    }
+
+    .project-media-placeholder span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      font-weight: 300;
+      color: var(--light);
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-blurb {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.7;
+      max-width: 400px;
+    }
+
+    .contact-blurb strong { color: var(--ink); font-weight: 500; }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: var(--ink);
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--rule);
+      background: var(--white);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .contact-link:hover {
+      border-color: var(--black);
+      background: var(--bg);
+    }
+
+    .contact-link-icon {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      border: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+
+    .contact-link-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--ink);
+    }
+
+    .contact-link-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-link-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 0.15rem;
+    }
+
+    .contact-link-value {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--light);
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      color: var(--light);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .hero { padding: 6rem 1.5rem 4rem; }
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-photo { width: 100%; height: 200px; }
+      section { padding: 4rem 1.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-card:nth-child(even) { border-right: none; }
+      .project-card:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+      .project-card:last-child { border-bottom: none; }
+      .contact-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useEffect, useRef } = React;
+
+    const projects = [
+      {
+        label: "Developer Tool",
+        title: "PR Reviewer",
+        desc: "AI-powered GitHub pull request reviewer. Fetches diffs, sends them to Claude with a structured persona prompt, and posts inline review comments at exact diff positions — with incremental re-review to skip unchanged hunks.",
+        tags: ["Python", "Claude API", "SQLite", "GitHub API"],
+        href: "https://github.com/suncycles/pr-reviewer",
+        image: null, // replace with: "assets/pr-reviewer.png"
+      },
+      {
+        label: "Mobile App",
+        title: "Fitlog",
+        desc: "Cross-platform weightlifting tracker for beginners to advanced lifters. Features an interactive muscle-group finder, per-exercise logging, and workout history — designed to replace messy notes apps.",
+        tags: ["Flutter", "Dart"],
+        href: "https://github.com/suncycles/fitlog",
+        image: null, // replace with: "assets/fitlog.png"
+      },
+      {
+        label: "Systems",
+        title: "Distributed Task Queue",
+        desc: "Redis-backed job scheduler with named multi-queue support, configurable worker pools, exponential backoff retry, and dead-letter queues. Load-tested to 1,000+ jobs/min with sub-100ms median dispatch latency.",
+        tags: ["Python", "Redis", "asyncio", "Docker"],
+        href: "https://github.com/suncycles/task-queue",
+        image: null, // replace with: "assets/task-queue.png"
+      },
+      {
+        label: "Work Contribution · SCU Libraries",
+        title: "FOLIO MetaDB",
+        desc: "Contributed reporting functions to SCU's FOLIO library system metadata database. Wrote PostgreSQL stored procedures and queries used by library staff for inventory and circulation reporting.",
+        tags: ["PostgreSQL", "PLpgSQL"],
+        href: "https://github.com/suncycles/scu-folio-metadb",
+        image: null, // replace with: "assets/folio.png"
+      },
+      {
+        label: "Automation · SCU Libraries",
+        title: "Missing Lists Automation",
+        desc: "Collection of Python scripts that automate status checking across FOLIO and EMS inventory systems. Compares item statuses across both systems and outputs a reconciliation report — cutting manual lookup time significantly.",
+        tags: ["Python", "pyautogui", "OpenCV"],
+        href: "https://github.com/suncycles/automate-missing-lists",
+        image: null, // replace with: "assets/automate.png"
+      },
+      {
+        label: "Computer Vision",
+        title: "Droplet Detection",
+        desc: "C++ and Python application for counting droplets in PCR microscopy images using OpenCV's Hough Circle Transform. Features a real-time slider GUI for tuning detection parameters without recompilation.",
+        tags: ["C++", "Python", "OpenCV"],
+        href: "https://github.com/suncycles/circles_opencv",
+        image: null, // replace with: "assets/circles.png"
+      },
+    ];
+
+    function useScrollFade() {
+      const ref = useRef(null);
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(
+          ([entry]) => { if (entry.isIntersecting) { el.classList.add("visible"); obs.disconnect(); } },
+          { threshold: 0.12 }
+        );
+        obs.observe(el);
+        return () => obs.disconnect();
+      }, []);
+      return ref;
+    }
+
+    function FadeIn({ children, style }) {
+      const ref = useScrollFade();
+      return <div ref={ref} className="fade-in" style={style}>{children}</div>;
+    }
+
+    function GithubIcon() {
+      return (
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      );
+    }
+
+    function LinkedinIcon() {
+      return (
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      );
+    }
+
+    function MailIcon() {
+      return (
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+        </svg>
+      );
+    }
+
+    function App() {
+      return (
+        <>
+          {/* NAV */}
+          <nav>
+            <a href="#top" className="nav-logo">MS</a>
+            <ul className="nav-links">
+              <li><a href="#projects">Projects</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </nav>
+
+          {/* HERO */}
+          <section className="hero" id="top">
+            <div className="hero-inner">
+              <div className="hero-content">
+                <p className="hero-eyebrow">CS Student · Santa Clara University</p>
+                <h1 className="hero-name">Michael Sun</h1>
+                <p className="hero-desc">
+                  I build <strong>tools that automate the tedious</strong> and systems that scale.
+                  Interested in backend infrastructure, developer tooling, and applied AI.
+                </p>
+                <div className="hero-cta">
+                  <a href="#projects" className="btn-primary">View Projects ↓</a>
+                  <a href="#contact" className="btn-ghost">Get in touch</a>
+                </div>
+              </div>
+              <div className="hero-photo">
+                {/* To add your photo: replace the placeholder below with:
+                    <img src="assets/headshot.jpg" alt="Michael Sun" /> */}
+                <div className="hero-photo-placeholder">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                  <span>Add headshot{"\n"}assets/headshot.jpg</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* PROJECTS */}
+          <section id="projects">
+            <FadeIn>
+              <div className="section-header">
+                <span className="section-num">01</span>
+                <h2 className="section-title">Projects</h2>
+              </div>
+            </FadeIn>
+            <FadeIn style={{ transitionDelay: "0.1s" }}>
+              <div className="projects-grid">
+                {projects.map((p, i) => (
+                  <a
+                    key={i}
+                    href={p.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-card"
+                  >
+                    <div className="project-media">
+                      {p.image
+                        ? <img src={p.image} alt={p.title} />
+                        : <div className="project-media-placeholder">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                            <span>screenshot / demo</span>
+                          </div>
+                      }
+                    </div>
+                    <div className="project-top">
+                      <div>
+                        <p className="project-label">{p.label}</p>
+                        <h3 className="project-title">{p.title}</h3>
+                      </div>
+                      <span className="project-arrow">↗</span>
+                    </div>
+                    <p className="project-desc">{p.desc}</p>
+                    <div className="project-tags">
+                      {p.tags.map((t, j) => <span key={j} className="tag">{t}</span>)}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </FadeIn>
+          </section>
+
+          {/* CONTACT */}
+          <section id="contact">
+            <FadeIn>
+              <div className="section-header">
+                <span className="section-num">02</span>
+                <h2 className="section-title">Contact</h2>
+              </div>
+            </FadeIn>
+            <FadeIn style={{ transitionDelay: "0.1s" }}>
+              <div className="contact-inner">
+                <p className="contact-blurb">
+                  Open to <strong>internships and new grad roles</strong> in software engineering.
+                  If you're working on something interesting, I'd love to hear about it.
+                </p>
+                <div className="contact-links">
+                  <a href="mailto:mich536ael@gmail.com" className="contact-link">
+                    <div className="contact-link-icon"><MailIcon /></div>
+                    <div className="contact-link-text">
+                      <span className="contact-link-label">Email</span>
+                      <span className="contact-link-value">mich536ael@gmail.com</span>
+                    </div>
+                  </a>
+                  <a href="https://github.com/suncycles" target="_blank" rel="noopener noreferrer" className="contact-link">
+                    <div className="contact-link-icon"><GithubIcon /></div>
+                    <div className="contact-link-text">
+                      <span className="contact-link-label">GitHub</span>
+                      <span className="contact-link-value">github.com/suncycles</span>
+                    </div>
+                  </a>
+                  <a href="https://linked.in/michaelsun04" target="_blank" rel="noopener noreferrer" className="contact-link">
+                    <div className="contact-link-icon"><LinkedinIcon /></div>
+                    <div className="contact-link-text">
+                      <span className="contact-link-label">LinkedIn</span>
+                      <span className="contact-link-value">linked.in/michaelsun04</span>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </FadeIn>
+          </section>
+
+          {/* FOOTER */}
+          <footer>
+            <span className="footer-name">Michael Sun</span>
+            <span className="footer-copy">© {new Date().getFullYear()}</span>
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
 </body>
 </html>
